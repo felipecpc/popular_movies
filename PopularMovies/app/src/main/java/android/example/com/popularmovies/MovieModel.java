@@ -5,49 +5,57 @@ package android.example.com.popularmovies;
  */
 
 public class MovieModel {
-    String original_title;
-    String plot_synopsis;
-    String user_rate;
-    String release_date;
-    String cover_link;
+    String originalTitle;
+    String plotSynopsis;
+    String userRate;
+    String releaseDate;
+    String coverLink;
 
-    public String getOriginal_title() {
-        return original_title;
+    public MovieModel(String originalTitle, String plotSynopsis, String userRate, String releaseDate, String coverLink){
+        this.originalTitle = originalTitle;
+        this.plotSynopsis = plotSynopsis;
+        this.userRate = userRate;
+        this.releaseDate = releaseDate;
+        this.coverLink = coverLink;
     }
 
-    public void setOriginal_title(String original_title) {
-        this.original_title = original_title;
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
-    public String getPlot_synopsis() {
-        return plot_synopsis;
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
     }
 
-    public void setPlot_synopsis(String plot_synopsis) {
-        this.plot_synopsis = plot_synopsis;
+    public String getPlotSynopsis() {
+        return plotSynopsis;
     }
 
-    public String getUser_rate() {
-        return user_rate;
+    public void setPlotSynopsis(String plotSynopsis) {
+        this.plotSynopsis = plotSynopsis;
     }
 
-    public void setUser_rate(String user_rate) {
-        this.user_rate = user_rate;
+    public String getUserRate() {
+        return userRate;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public void setUserRate(String userRate) {
+        this.userRate = userRate;
     }
 
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public String getCover_link() {
-        return cover_link;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public void setCover_link(String cover_link) {
-        this.cover_link = cover_link;
+    public String getCoverLink() {
+        return coverLink;
+    }
+
+    public void setCoverLink(String coverLink) {
+        this.coverLink = coverLink;
     }
 }
