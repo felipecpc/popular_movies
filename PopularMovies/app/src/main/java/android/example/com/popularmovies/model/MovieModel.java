@@ -1,4 +1,4 @@
-package android.example.com.popularmovies;
+package android.example.com.popularmovies.model;
 
 /**
  * Created by felipe on 14/04/17.

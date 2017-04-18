@@ -1,4 +1,4 @@
-package android.example.com.popularmovies;
+package android.example.com.popularmovies.view;
 
 /**
  * Created by felipe on 14/04/17.

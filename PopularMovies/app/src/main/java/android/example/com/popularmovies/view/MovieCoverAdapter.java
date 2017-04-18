@@ -1,8 +1,9 @@
-package android.example.com.popularmovies;
+package android.example.com.popularmovies.view;
 
 import android.content.Context;
+import android.example.com.popularmovies.model.MovieModel;
+import android.example.com.popularmovies.R;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import static android.R.attr.onClick;
+import java.util.ArrayList;
 
 /**
  * Created by felipe on 14/04/17.
@@ -19,11 +20,10 @@ import static android.R.attr.onClick;
 
 public class MovieCoverAdapter extends RecyclerView.Adapter<MovieCoverAdapter.MovieCoverViewHolder> {
 
-    MovieModel mMovieItems[];
+    ArrayList<MovieModel> mMovieItems = new ArrayList<MovieModel>();
     MovieSelectedInterface mMovieSelectedInterface;
 
-    public MovieCoverAdapter(MovieSelectedInterface selectedInterface,MovieModel movieData[]){
-        mMovieItems = movieData;
+    public MovieCoverAdapter(MovieSelectedInterface selectedInterface){
         mMovieSelectedInterface = selectedInterface;
     }
 
@@ -40,18 +40,23 @@ public class MovieCoverAdapter extends RecyclerView.Adapter<MovieCoverAdapter.Mo
         return viewHolder;
     }
 
+    public void setMovieData(ArrayList<MovieModel> movieData){
+        mMovieItems = movieData;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(MovieCoverViewHolder holder, int position) {
-        holder.movieTitle.setText(mMovieItems[position].getOriginalTitle());
+        holder.movieTitle.setText(mMovieItems.get(position).getOriginalTitle());
         ImageView imgView = holder.movieCover;
-        Picasso.with(imgView.getContext()).load(mMovieItems[position].getCoverLink())
+        Picasso.with(imgView.getContext()).load(mMovieItems.get(position).getCoverLink())
                 .fit()
                 .into(imgView);
     }
 
     @Override
     public int getItemCount() {
-        return mMovieItems.length;
+        return mMovieItems.size();
     }
 
     class MovieCoverViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
