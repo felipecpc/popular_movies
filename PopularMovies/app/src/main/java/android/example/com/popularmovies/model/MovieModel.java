@@ -1,10 +1,13 @@
 package android.example.com.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by felipe on 14/04/17.
  */
 
-public class MovieModel {
+public class MovieModel implements Parcelable{
     String originalTitle;
     String plotSynopsis;
     String userRate;
@@ -58,4 +61,32 @@ public class MovieModel {
     public void setCoverLink(String coverLink) {
         this.coverLink = coverLink;
     }
+
+    public static final Parcelable.Creator<MovieModel> CREATOR = new Parcelable.Creator<MovieModel>() {
+        public MovieModel createFromParcel(Parcel source) {
+            MovieModel movieModel = new MovieModel(
+                    source.readString(),
+                    source.readString(),
+                    source.readString(),
+                    source.readString(),
+                    source.readString());
+
+            return movieModel;
+        }
+        public MovieModel[] newArray(int size) {
+            return new MovieModel[size];
+        }
+    };
+
+    public int describeContents() {
+        return 0;
+    }
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(originalTitle);
+        parcel.writeString(plotSynopsis);
+        parcel.writeString(userRate);
+        parcel.writeString(releaseDate);
+        parcel.writeString(coverLink);
+    }
+
 }

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     private RecyclerView mMovieCoverList;
     private MovieCoverAdapter mMovieCoverAdapter;
     private HttpConnectionManager mHttpConnectionManager;
+    ArrayList<MovieModel> mMovieList = new ArrayList<MovieModel>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     @Override
     public void movieSelected(int selected) {
         Intent newIntent = new Intent(this,MovieDetails.class);
+        newIntent.putExtra("MOVIE_DETAIL",mMovieList.get(selected));
         startActivity(newIntent);
         Log.d(TAG,"Item selected " + selected);
     }
@@ -87,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         if (response.getStatus().equals(HttpReponseModel.RequestStatus.SUCCESS)){
             //Log.d(TAG,response.getResponseData());
             MovieListParser mListParser = new MovieListParser();
-            mMovieCoverAdapter.setMovieData(mListParser.parseData(response.getResponseData()));
+            mMovieList = mListParser.parseData(response.getResponseData());
+            mMovieCoverAdapter.setMovieData(mMovieList);
 
         }else{
             Log.d(TAG,response.getResponseData());
