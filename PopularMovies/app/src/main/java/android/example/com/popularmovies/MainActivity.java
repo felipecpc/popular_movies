@@ -8,6 +8,8 @@ import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.parser.MovieListParser;
 import android.example.com.popularmovies.view.MovieCoverAdapter;
 import android.example.com.popularmovies.view.MovieSelectedInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -108,13 +111,18 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     @Override
     public void requestResponse(HttpReponseModel response) {
         if (response.getStatus().equals(HttpReponseModel.RequestStatus.SUCCESS)){
-            //Log.d(TAG,response.getResponseData());
             MovieListParser mListParser = new MovieListParser();
             mMovieList = mListParser.parseData(response.getResponseData());
             mMovieCoverAdapter.setMovieData(mMovieList);
 
         }else{
-            Log.d(TAG,response.getResponseData());
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this,getResources().getText(R.string.error),Toast.LENGTH_LONG).show();
+                }
+            });
+
         }
     }
 }

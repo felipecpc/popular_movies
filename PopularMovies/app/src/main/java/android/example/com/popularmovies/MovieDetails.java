@@ -36,6 +36,7 @@ public class MovieDetails extends AppCompatActivity {
             tvMovieTitle.setText(mMovieDetails.getOriginalTitle());
             Picasso.with(ivMovieCover.getContext()).load(mMovieDetails.getCoverLink())
                     .fit()
+                    .error(ivMovieCover.getContext().getResources().getDrawable(R.drawable.ops))
                     .into(ivMovieCover);
             tvOverview.setText(mMovieDetails.getPlotSynopsis());
             tvReleaseDate.setText(mMovieDetails.getReleaseDate());
