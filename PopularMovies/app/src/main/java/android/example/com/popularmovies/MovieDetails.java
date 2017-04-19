@@ -15,6 +15,7 @@ public class MovieDetails extends AppCompatActivity {
     private TextView tvMovieTitle;
     private TextView tvOverview;
     private TextView tvReleaseDate;
+    private TextView tvUserRate;
     private ImageView ivMovieCover;
 
     @Override
@@ -26,6 +27,7 @@ public class MovieDetails extends AppCompatActivity {
         ivMovieCover = (ImageView) findViewById(R.id.iv_movie_cover_details);
         tvOverview = (TextView) findViewById(R.id.tv_overview) ;
         tvReleaseDate = (TextView) findViewById(R.id.tv_releasedate) ;
+        tvUserRate = (TextView) findViewById(R.id.tv_user_rate);
         Intent receivedIntent = getIntent();
 
         if (receivedIntent.hasExtra("MOVIE_DETAIL")){
@@ -37,6 +39,7 @@ public class MovieDetails extends AppCompatActivity {
                     .into(ivMovieCover);
             tvOverview.setText(mMovieDetails.getPlotSynopsis());
             tvReleaseDate.setText(mMovieDetails.getReleaseDate());
+            tvUserRate.setText(mMovieDetails.getUserRate());
         }
 
 

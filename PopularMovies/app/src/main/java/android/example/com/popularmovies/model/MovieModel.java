@@ -13,13 +13,15 @@ public class MovieModel implements Parcelable{
     String userRate;
     String releaseDate;
     String coverLink;
+    String posterLink;
 
-    public MovieModel(String originalTitle, String plotSynopsis, String userRate, String releaseDate, String coverLink){
+    public MovieModel(String originalTitle, String plotSynopsis, String userRate, String releaseDate, String coverLink, String posterLink){
         this.originalTitle = originalTitle;
         this.plotSynopsis = plotSynopsis;
         this.userRate = userRate;
         this.releaseDate = releaseDate;
         this.coverLink = coverLink;
+        this.posterLink = posterLink;
     }
 
     public String getOriginalTitle() {
@@ -62,9 +64,18 @@ public class MovieModel implements Parcelable{
         this.coverLink = coverLink;
     }
 
+    public String getPosterLink() {
+        return posterLink;
+    }
+
+    public void setPosterLink(String posterLink) {
+        this.posterLink = posterLink;
+    }
+
     public static final Parcelable.Creator<MovieModel> CREATOR = new Parcelable.Creator<MovieModel>() {
         public MovieModel createFromParcel(Parcel source) {
             MovieModel movieModel = new MovieModel(
+                    source.readString(),
                     source.readString(),
                     source.readString(),
                     source.readString(),
@@ -87,6 +98,7 @@ public class MovieModel implements Parcelable{
         parcel.writeString(userRate);
         parcel.writeString(releaseDate);
         parcel.writeString(coverLink);
+        parcel.writeString(posterLink);
     }
 
 }

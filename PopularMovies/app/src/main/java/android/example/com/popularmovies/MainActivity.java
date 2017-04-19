@@ -8,6 +8,7 @@ import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.parser.MovieListParser;
 import android.example.com.popularmovies.view.MovieCoverAdapter;
 import android.example.com.popularmovies.view.MovieSelectedInterface;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,7 +27,9 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     private RecyclerView mMovieCoverList;
     private MovieCoverAdapter mMovieCoverAdapter;
     private HttpConnectionManager mHttpConnectionManager;
-    ArrayList<MovieModel> mMovieList = new ArrayList<MovieModel>();
+    private static ArrayList<MovieModel> mMovieList = null;
+
+    private static Bundle mBundleRecyclerViewState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +43,17 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
 
         mMovieCoverList.setHasFixedSize(true);
 
-        /*MovieModel fakeData[] = {
-                new MovieModel("The Boss Baby",null,null,null,"http://image.tmdb.org/t/p/w185/bTFeSwh07oX99ofpDI4O2WkiFJ.jpg"),
-                new MovieModel("Beauty and the Beast",null,null,null,"http://image.tmdb.org/t/p/w185/6aUWe0GSl69wMTSWWexsorMIvwU.jpg"),
-                new MovieModel("Logan",null,null,null,"http://image.tmdb.org/t/p/w185/5pAGnkFYSsFJ99ZxDIYnhQbQFXs.jpg"),
-                new MovieModel("Sing",null,null,null,"http://image.tmdb.org/t/p/w185/fxDXp8un4qNY9b1dLd7SH6CKzC.jpg"),
-        };*/
-
         mMovieCoverAdapter = new MovieCoverAdapter(this);
         mMovieCoverList.setAdapter(mMovieCoverAdapter);
 
         mHttpConnectionManager = new HttpConnectionManager(this);
-        mHttpConnectionManager.queryPopularMovies();
+
+        if (mMovieList == null){
+            mMovieList = new ArrayList<MovieModel>();
+            mHttpConnectionManager.queryPopularMovies();
+        }else{
+            mMovieCoverAdapter.setMovieData(mMovieList);
+        }
     }
 
     @Override
@@ -59,6 +61,25 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // save RecyclerView state
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = mMovieCoverList.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable("RV_STATE", listState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // restore RecyclerView state
+        if (mBundleRecyclerViewState != null) {
+            Parcelable listState = mBundleRecyclerViewState.getParcelable("RV_STATE");
+            mMovieCoverList.getLayoutManager().onRestoreInstanceState(listState);
+        }
     }
 
     @Override

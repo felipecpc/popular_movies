@@ -47,9 +47,8 @@ public class MovieCoverAdapter extends RecyclerView.Adapter<MovieCoverAdapter.Mo
 
     @Override
     public void onBindViewHolder(MovieCoverViewHolder holder, int position) {
-        holder.movieTitle.setText(mMovieItems.get(position).getOriginalTitle());
         ImageView imgView = holder.movieCover;
-        Picasso.with(imgView.getContext()).load(mMovieItems.get(position).getCoverLink())
+        Picasso.with(imgView.getContext()).load(mMovieItems.get(position).getPosterLink())
                 .fit()
                 .into(imgView);
     }
@@ -61,13 +60,11 @@ public class MovieCoverAdapter extends RecyclerView.Adapter<MovieCoverAdapter.Mo
 
     class MovieCoverViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView movieTitle;
         ImageView movieCover;
 
         public MovieCoverViewHolder(View itemView) {
             super(itemView);
 
-            movieTitle = (TextView) itemView.findViewById(R.id.tv_movie_title);
             movieCover = (ImageView) itemView.findViewById(R.id.iv_movie_cover);
             itemView.setOnClickListener(this);
 

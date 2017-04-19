@@ -27,7 +27,8 @@ public class MovieListParser extends DataParserBase{
                                                 moviesData.getString("overview"),
                                                 moviesData.getString("vote_average"),
                                                 moviesData.getString("release_date"),
-                                                "http://image.tmdb.org/t/p/w185"+moviesData.getString("backdrop_path")
+                                                "http://image.tmdb.org/t/p/w185"+moviesData.getString("backdrop_path"),
+                                                "http://image.tmdb.org/t/p/w185"+moviesData.getString("poster_path")
                                                 ));
 
             }
@@ -38,3 +39,5 @@ public class MovieListParser extends DataParserBase{
         return movieModelArray;
     }
 }
+
+
