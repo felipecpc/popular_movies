@@ -28,7 +28,7 @@ public class HttpConnectionManager {
     }
 
     private void run(String url) {
-        Log.d(TAG,url);
+
         final OkHttpClient client = new OkHttpClient();
 
         final Request request = new Request.Builder()
@@ -41,11 +41,11 @@ public class HttpConnectionManager {
                 try {
                     Response response = client.newCall(request).execute();
                     if (!response.isSuccessful()) {
-                        mHttpConnectionInterface.requestResponse(new HttpReponseModel(HttpReponseModel.RequestStatus.FAIL,"Fail"));
+                        mHttpConnectionInterface.requestResponse(new HttpReponseModel(HttpReponseModel.RequestStatus.FAIL, "Fail"));
                     }
                     return response.body().string();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    mHttpConnectionInterface.requestResponse(new HttpReponseModel(HttpReponseModel.RequestStatus.FAIL, "Fail"));
                     return null;
                 }
             }
@@ -54,7 +54,7 @@ public class HttpConnectionManager {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 if (s != null) {
-                    mHttpConnectionInterface.requestResponse(new HttpReponseModel(HttpReponseModel.RequestStatus.SUCCESS,s));
+                    mHttpConnectionInterface.requestResponse(new HttpReponseModel(HttpReponseModel.RequestStatus.SUCCESS, s));
 
                 }
             }

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     private static ArrayList<MovieModel> mMovieList = null;
 
     private static Bundle mBundleRecyclerViewState;
+    private String EXTRA_APP_STATE = "APP_STATE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +70,9 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     @Override
     protected void onPause() {
         super.onPause();
-        // save RecyclerView state
         mBundleRecyclerViewState = new Bundle();
         Parcelable listState = mMovieCoverList.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable("RV_STATE", listState);
+        mBundleRecyclerViewState.putParcelable(EXTRA_APP_STATE, listState);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         super.onResume();
         // restore RecyclerView state
         if (mBundleRecyclerViewState != null) {
-            Parcelable listState = mBundleRecyclerViewState.getParcelable("RV_STATE");
+            Parcelable listState = mBundleRecyclerViewState.getParcelable(EXTRA_APP_STATE);
             mMovieCoverList.getLayoutManager().onRestoreInstanceState(listState);
         }
     }
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     @Override
     public void movieSelected(int selected) {
         Intent newIntent = new Intent(this,MovieDetails.class);
-        newIntent.putExtra("MOVIE_DETAIL",mMovieList.get(selected));
+        newIntent.putExtra(MovieDetails.EXTRA_MOVIE_DETAILS,mMovieList.get(selected));
         startActivity(newIntent);
         Log.d(TAG,"Item selected " + selected);
     }

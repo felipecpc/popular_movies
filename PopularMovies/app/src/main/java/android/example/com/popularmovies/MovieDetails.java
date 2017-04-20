@@ -18,6 +18,8 @@ public class MovieDetails extends AppCompatActivity {
     private TextView tvUserRate;
     private ImageView ivMovieCover;
 
+    public static String EXTRA_MOVIE_DETAILS = "MOVIE_DETAILS";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +32,8 @@ public class MovieDetails extends AppCompatActivity {
         tvUserRate = (TextView) findViewById(R.id.tv_user_rate);
         Intent receivedIntent = getIntent();
 
-        if (receivedIntent.hasExtra("MOVIE_DETAIL")){
-            mMovieDetails = receivedIntent.getParcelableExtra("MOVIE_DETAIL");
+        if (receivedIntent.hasExtra(EXTRA_MOVIE_DETAILS)){
+            mMovieDetails = receivedIntent.getParcelableExtra(EXTRA_MOVIE_DETAILS);
 
             tvMovieTitle.setText(mMovieDetails.getOriginalTitle());
             Picasso.with(ivMovieCover.getContext()).load(mMovieDetails.getCoverLink())
