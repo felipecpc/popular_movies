@@ -1,5 +1,6 @@
 package android.example.com.popularmovies.connection;
 
+import android.example.com.popularmovies.BuildConfig;
 import android.example.com.popularmovies.model.HttpReponseModel;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -17,7 +18,7 @@ public class HttpConnectionManager {
     private static final String TAG = HttpConnectionManager.class.getSimpleName();
 
     private String BASE_URL  = "http://api.themoviedb.org/3/";
-    private String KEY = "SET YOUR KEY";
+    private String KEY = BuildConfig.MOVIE_DB_API_TOKEN;
     private String QUERY_POPULAR = "movie/popular";
     private String QUERY_TOP_RATED = "movie/top_rated";
 
