@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
 
         mMovieCoverList = (RecyclerView) findViewById(R.id.rv_movies_cover);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
         mMovieCoverList.setLayoutManager(layoutManager);
 
         mMovieCoverList.setHasFixedSize(true);
