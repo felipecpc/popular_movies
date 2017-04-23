@@ -3,6 +3,8 @@
     <string name="menu_sort">Sort</string>
     <string name="menu_top_rated">Top Rated</string>
     <string name="menu_popular">Most Popular</string>
+    <string name="overview_title">Overview </string>
+    <string name="release_date_title">Release date</string>
     <string name="error">Not able to process your request</string>
     <string name="title_activity_movie_details">Details</string>
 
