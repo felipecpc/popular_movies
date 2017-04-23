@@ -1,21 +1,25 @@
 package android.example.com.popularmovies;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.example.com.popularmovies.connection.HttpConnectionInterface;
 import android.example.com.popularmovies.connection.HttpConnectionManager;
 import android.example.com.popularmovies.model.HttpReponseModel;
 import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.parser.MovieListParser;
+import android.example.com.popularmovies.ui.GridRecyclerView;
 import android.example.com.popularmovies.view.MovieCoverAdapter;
 import android.example.com.popularmovies.view.MovieSelectedInterface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private RecyclerView mMovieCoverList;
+    private GridRecyclerView mMovieCoverList;
     private MovieCoverAdapter mMovieCoverAdapter;
     private HttpConnectionManager mHttpConnectionManager;
     private static ArrayList<MovieModel> mMovieList = null;
@@ -41,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMovieCoverList = (RecyclerView) findViewById(R.id.rv_movies_cover);
+        mMovieCoverList = (GridRecyclerView) findViewById(R.id.rv_movies_cover);
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         mMovieCoverList.setLayoutManager(layoutManager);
 
         mMovieCoverList.setHasFixedSize(true);
@@ -126,4 +130,9 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
 
         }
     }
+
+    @Override public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+    }
+
 }
