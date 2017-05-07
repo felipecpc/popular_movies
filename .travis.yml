@@ -10,3 +10,6 @@ android:
 
 script:
    - cd PopularMovies && ./gradlew assembleDebug
+
+jdk:
+  - oraclejdk8
