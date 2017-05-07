@@ -9,4 +9,4 @@ android:
     - extra-android-m2repository
 
 script:
-   - cd PopularMoview && ./gradlew assembleDebug
+   - cd PopularMovies && ./gradlew assembleDebug
