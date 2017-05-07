@@ -24,5 +24,8 @@ script:
 jdk:
   - oraclejdk8
 
+after_success:
+  - curl -F file=@app/build/outputs/apk/app-debug.apk -F channels=#jenkins -F token=xoxb-180002767445-yipwk8QBbTSD08g2b1KozTlH https://slack.com/api/files.upload 
+
 notifications:
   slack: felipecpc:fPwiCIB0IGY2bSxCqiGsWhlD
