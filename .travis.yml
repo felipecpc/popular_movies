@@ -26,7 +26,3 @@ jdk:
 
 notifications:
   slack: felipecpc:fPwiCIB0IGY2bSxCqiGsWhlD
-  template:
-      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository}@%{branch} by %{author} %{result} in %{duration}"
-    on_success: change
-    on_failure: always
