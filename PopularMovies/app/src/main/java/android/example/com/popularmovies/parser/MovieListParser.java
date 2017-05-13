@@ -22,7 +22,8 @@ public class MovieListParser extends DataParserBase{
             for(int x=0;x<results.length();x++){
                 JSONObject moviesData = new JSONObject(results.get(x).toString());
 
-                movieModelArray.add(new MovieModel(  moviesData.getString("original_title"),
+                movieModelArray.add(new MovieModel(moviesData.getInt("id"),
+                                                moviesData.getString("original_title"),
                                                 moviesData.getString("overview"),
                                                 moviesData.getString("vote_average"),
                                                 moviesData.getString("release_date"),
