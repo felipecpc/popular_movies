@@ -48,7 +48,8 @@
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <FrameLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -120,7 +121,50 @@
 
                 </android.support.v7.widget.CardView>
 
-            </FrameLayout>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_trailers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="@dimen/margin_regular"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/trailers_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_regular"
+                            android:layout_marginRight="@dimen/margin_regular"
+                            android:layout_marginTop="@dimen/margin_regular"
+                            android:text="@string/trailer_title"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rc_trailer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:horizontalSpacing="10dp"
+                            android:isScrollContainer="false"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="10dp"
+                            />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
 

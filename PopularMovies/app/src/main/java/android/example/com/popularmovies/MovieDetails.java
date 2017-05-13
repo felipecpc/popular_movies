@@ -1,20 +1,23 @@
 package android.example.com.popularmovies;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.example.com.popularmovies.databinding.ActivityMovieDetailsBinding;
 import android.example.com.popularmovies.model.MovieModel;
+import android.example.com.popularmovies.model.TrailerModel;
+import android.example.com.popularmovies.view.MovieSelectedInterface;
+import android.example.com.popularmovies.view.TrailerAdapter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,7 +25,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetails extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MovieDetails extends AppCompatActivity implements MovieSelectedInterface {
 
     MovieModel mMovieDetails;
     private TextView tvMovieTitle;
@@ -30,9 +35,12 @@ public class MovieDetails extends AppCompatActivity {
     private TextView tvReleaseDate;
     private TextView tvUserRate;
     private ImageView ivMovieCover;
+    private RecyclerView rcTrailer;
     CollapsingToolbarLayout collapsingToolbarLayout;
-
+    private TrailerAdapter mTrailerAdapter;
     public static String EXTRA_MOVIE_DETAILS = "MOVIE_DETAILS";
+
+    ArrayList<TrailerModel> trailersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,37 @@ public class MovieDetails extends AppCompatActivity {
 
         ActivityMovieDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
 
+        mTrailerAdapter = new TrailerAdapter(this);
+
+        //Create Fake Data
+        trailersList = new ArrayList<>();
+        trailersList.add(new TrailerModel(0,"tWapqpCEO7Y","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(1,"c38r-SAnTWM","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(2,"bgeSXHvPoBI","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(3,"BZj00cPRmUo","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(4,"hIoJ0tYJtsU","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(5,"hIoJ0tYJtsU","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(6,"vyBd-UtVlZU","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(7,"TjI83VLKQ3I","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(8,"6CUwMuQIpNk","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(8,"KSTGuuTqcAk","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(10,"Si4uWyCGT2U","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(11,"OvW_L8sTu5E","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(12,"nT1VQkTTT7M","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(13,"S7ENUYTXlJg","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(14,"e3Nl_TCQXuw","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(15,"Ow78zp30ioE","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(16,"Sq8vjBg7EWE","Video link 1 hahahaha"));
+        trailersList.add(new TrailerModel(17,"MKyp9Tx-NPY","Video link 1 hahahaha"));
+
+        mTrailerAdapter.setMovieData(trailersList);
+
+
         ivMovieCover = (ImageView) findViewById(R.id.iv_movie_cover_details);
+        rcTrailer = (RecyclerView) findViewById(R.id.rc_trailer);
+
+        rcTrailer.setAdapter(mTrailerAdapter);
+        rcTrailer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         if (isPortraint())
             collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -108,4 +146,8 @@ public class MovieDetails extends AppCompatActivity {
     }
 
 
+    @Override
+    public void movieSelected(int selected) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+trailersList.get(selected).getKey())));
+    }
 }
