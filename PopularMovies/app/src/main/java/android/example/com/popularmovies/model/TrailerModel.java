@@ -11,10 +11,6 @@ public class TrailerModel implements Parcelable{
     int id;
     String key;
     String nome;
-    String userRate;
-    String releaseDate;
-    String coverLink;
-    String posterLink;
 
     public TrailerModel(int id, String key, String nome){
         this.id= id;

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    android:id="@+id/movie_details_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -9,6 +11,7 @@
     </data>
 
     <android.support.design.widget.CoordinatorLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -161,6 +164,48 @@
                             />
 
                     </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="@dimen/margin_regular"
+                    app:cardUseCompatPadding="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/review_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/review_next"
+                            android:layout_alignBottom="@+id/review_next"
+                            android:layout_marginLeft="@dimen/margin_regular"
+                            android:layout_marginRight="@dimen/margin_regular"
+                            android:layout_marginStart="@dimen/margin_regular"
+                            android:text="@string/review_title"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+                        <TextView
+                            android:id="@+id/review_next"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_regular"
+                            android:layout_marginRight="@dimen/margin_regular"
+                            android:layout_marginBottom="@dimen/elevation_regular"
+                            android:text="@string/review_next"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true" />
+
+
+                    </RelativeLayout>
 
                 </android.support.v7.widget.CardView>
 

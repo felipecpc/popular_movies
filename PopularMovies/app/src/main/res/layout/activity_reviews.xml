@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="android.example.com.popularmovies.view.ReviewsActivity">
+
+
+    <android.example.com.popularmovies.ui.GridRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rv_movies_review"
+        android:layoutAnimation="@anim/grid_layout_animation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </android.example.com.popularmovies.ui.GridRecyclerView>
+
+</android.support.constraint.ConstraintLayout>
