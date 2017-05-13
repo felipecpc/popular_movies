@@ -2,6 +2,9 @@ package android.example.com.popularmovies;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
+import android.example.com.popularmovies.databinding.ActivityMovieDetailsBinding;
 import android.example.com.popularmovies.model.MovieModel;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -38,20 +41,19 @@ public class MovieDetails extends AppCompatActivity {
 
         initActivityTransitions();
 
-        tvMovieTitle = (TextView) findViewById(R.id.tv_original_title_details) ;
+        ActivityMovieDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
+
         ivMovieCover = (ImageView) findViewById(R.id.iv_movie_cover_details);
-        tvOverview = (TextView) findViewById(R.id.tv_overview) ;
-        tvReleaseDate = (TextView) findViewById(R.id.tv_releasedate) ;
-        tvUserRate = (TextView) findViewById(R.id.tv_user_rate);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+
+        if (isPortraint())
+            collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
 
         Intent receivedIntent = getIntent();
 
         if (receivedIntent.hasExtra(EXTRA_MOVIE_DETAILS)){
             mMovieDetails = receivedIntent.getParcelableExtra(EXTRA_MOVIE_DETAILS);
-
-            tvMovieTitle.setText(mMovieDetails.getOriginalTitle());
+            binding.setMovie(mMovieDetails);
 
             Picasso.with(ivMovieCover.getContext()).load(mMovieDetails.getCoverLink())
                     .fit()
@@ -62,7 +64,8 @@ public class MovieDetails extends AppCompatActivity {
                     Bitmap bitmap = ((BitmapDrawable) ivMovieCover.getDrawable()).getBitmap();
                     Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                         public void onGenerated(Palette palette) {
-                            applyPalette(palette);
+                            if (isPortraint())
+                                applyPalette(palette);
                         }
                     });
                 }
@@ -73,9 +76,6 @@ public class MovieDetails extends AppCompatActivity {
                 }
             });
 
-            tvOverview.setText(mMovieDetails.getPlotSynopsis());
-            tvReleaseDate.setText(mMovieDetails.getReleaseDate());
-            tvUserRate.setText(mMovieDetails.getUserRate());
         }
 
 
@@ -102,6 +102,10 @@ public class MovieDetails extends AppCompatActivity {
         supportStartPostponedEnterTransition();
     }
 
+    private boolean isPortraint (){
+        Configuration config = getResources().getConfiguration();
+        return (config.getLayoutDirection()==config.ORIENTATION_PORTRAIT ? true:false);
+    }
 
 
 }
