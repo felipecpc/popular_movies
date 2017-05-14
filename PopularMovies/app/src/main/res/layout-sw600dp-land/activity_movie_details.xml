@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="movie" type="android.example.com.popularmovies.model.MovieModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarAlwaysDrawHorizontalTrack="false"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        tools:context="android.example.com.popularmovies.MovieDetails">
+
+        <ImageView
+            android:id="@+id/iv_movie_cover_details"
+            android:layout_width="200dp"
+            android:layout_height="295dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scroll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_regular"
+            android:layout_marginStart="@dimen/margin_regular"
+            android:clipToPadding="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintLeft_toRightOf="@+id/iv_movie_cover_details"
+            android:layout_marginRight="@dimen/margin_regular"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.961"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/margin_regular"
+            android:layout_marginEnd="@dimen/margin_regular">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="@dimen/margin_regular"
+                    app:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ToggleButton
+                            android:id="@+id/toggleButton"
+                            android:layout_width="@dimen/image_square_medium"
+                            android:layout_height="@dimen/image_square_medium"
+                            android:background="@drawable/toggle_favorites"
+                            android:layout_marginTop="@dimen/margin_regular"
+                            android:layout_marginBottom="@dimen/margin_regular"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:textOff=""
+                            android:textOn=""/>
+
+                        <TextView
+                            android:id="@+id/tv_original_title_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_regular"
+                            android:text="@{movie.originalTitle}"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="528dp"
+                    android:layout_height="258dp"
+                    app:cardElevation="@dimen/margin_regular"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_overview_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_regular"
+                            android:layout_marginStart="@dimen/margin_regular"
+                            android:layout_marginTop="@dimen/margin_big"
+                            android:text="@string/overview_title"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_overview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_regular"
+                            android:layout_marginStart="@dimen/margin_regular"
+                            android:singleLine="false"
+                            android:text="@{movie.plotSynopsis}"
+                            tools:text="Overview details" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:orientation="horizontal">
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_regular"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/tv_releasedate_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/margin_regular"
+                                android:text="@string/release_date_title"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                            <TextView
+                                android:id="@+id/tv_releasedate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/margin_regular"
+                                android:layout_marginLeft="@dimen/margin_regular"
+                                android:layout_marginStart="@dimen/margin_regular"
+                                android:text="@{movie.releaseDate}"
+                                tools:text="Release date" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_regular"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/margin_regular"
+                                android:text="@string/user_rate"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                />
+
+                            <TextView
+                                android:id="@+id/tv_user_rate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/margin_regular"
+                                android:layout_marginLeft="@dimen/margin_regular"
+                                android:layout_marginStart="@dimen/margin_regular"
+                                android:text="@{movie.userRate}"
+                                tools:text="7.5"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                 />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_trailers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="@dimen/margin_regular"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/trailers_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_regular"
+                            android:layout_marginRight="@dimen/margin_regular"
+                            android:layout_marginTop="@dimen/margin_regular"
+                            android:text="@string/trailer_title"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rc_trailer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_big"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginRight="@dimen/margin_small"
+                            android:layout_marginTop="@dimen/margin_regular"
+                            android:horizontalSpacing="10dp"
+                            android:isScrollContainer="false"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="10dp" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="@dimen/margin_regular"
+                    app:cardUseCompatPadding="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/review_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/review_next"
+                            android:layout_alignBottom="@+id/review_next"
+                            android:layout_marginLeft="@dimen/margin_regular"
+                            android:layout_marginRight="@dimen/margin_regular"
+                            android:layout_marginStart="@dimen/margin_regular"
+                            android:text="@string/review_title"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+                        <TextView
+                            android:id="@+id/review_next"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginBottom="@dimen/elevation_regular"
+                            android:layout_marginLeft="@dimen/margin_regular"
+                            android:layout_marginRight="@dimen/margin_regular"
+                            android:text="@string/review_next"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
