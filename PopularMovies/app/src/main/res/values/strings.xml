@@ -11,5 +11,6 @@
     <string name="trailer_title">Trailers</string>
     <string name="review_title">Reviews</string>
     <string name="review_next"><![CDATA[>]]></string>
+    <string name="user_rate">User Rate:</string>
 
 </resources>

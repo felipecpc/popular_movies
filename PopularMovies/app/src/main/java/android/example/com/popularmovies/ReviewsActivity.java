@@ -11,6 +11,7 @@ import android.example.com.popularmovies.ui.GridRecyclerView;
 import android.example.com.popularmovies.view.ReviewsAdapter;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class ReviewsActivity extends AppCompatActivity {
 
     private static ArrayList<ReviewsModel> mReviewList = null;
     private String mId;
-
+    public static final String STATE_ID = "id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,10 @@ public class ReviewsActivity extends AppCompatActivity {
 
         if(getIntent().hasExtra(HttpRequest.ID)){
             mId = getIntent().getStringExtra(HttpRequest.ID);
+        }
+
+        if(savedInstanceState!=null){
+            mId = savedInstanceState.getString(STATE_ID);
         }
 
         mMovieReviewList.setHasFixedSize(true);
@@ -65,6 +70,20 @@ public class ReviewsActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter(HttpRequest.HTTP_CONNECTION_FILTER));
+
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(STATE_ID,mId);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
 
     }

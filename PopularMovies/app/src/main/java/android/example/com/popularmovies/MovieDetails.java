@@ -63,6 +63,10 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
         mTrailerAdapter = new TrailerAdapter(this);
 
 
+        if(savedInstanceState!=null){
+            mMovieDetails = savedInstanceState.getParcelable(STATE_MOVIE_DETAIL);
+            trailersList = savedInstanceState.getParcelableArrayList(STATE_TRAILERS);
+        }
 
         ivMovieCover = (ImageView) findViewById(R.id.iv_movie_cover_details);
         rcTrailer = (RecyclerView) findViewById(R.id.rc_trailer);
@@ -144,6 +148,7 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+
 
         super.onRestoreInstanceState(savedInstanceState);
     }
