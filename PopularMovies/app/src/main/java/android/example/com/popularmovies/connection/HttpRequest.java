@@ -30,6 +30,7 @@ public class HttpRequest extends IntentService{
     public final static String QUERY_TOP_RATED = "top_rated";
     public final static String QUERY_TRAILER = "videos";
     public final static String QUERY_REVIEW = "reviews";
+    public final static String QUERY_FAVORITE = "favorite";
 
 
     public final static String REQUEST = "REQUEST";

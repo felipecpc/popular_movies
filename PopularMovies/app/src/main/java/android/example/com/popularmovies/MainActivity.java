@@ -35,12 +35,19 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
 
     private static Bundle mBundleRecyclerViewState;
     private String EXTRA_APP_STATE = "APP_STATE";
+    private String EXTRA_QUERY_TYPE = "QUERY_TYPE";
+
+    private String mQueryType=null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(savedInstanceState!=null){
+            mBundleRecyclerViewState = savedInstanceState;
+        }
 
         mMovieCoverList = (GridRecyclerView) findViewById(R.id.rv_movies_cover);
 
@@ -53,11 +60,11 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         mMovieCoverList.setAdapter(mMovieCoverAdapter);
 
 
+
         if (mMovieList == null){
             mMovieList = new ArrayList<MovieModel>();
-
+            mQueryType = HttpRequest.QUERY_POPULAR;
             HttpRequest.query(this,HttpRequest.QUERY_POPULAR);
-
         }else{
             mMovieCoverAdapter.setMovieData(mMovieList);
         }
@@ -76,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         mBundleRecyclerViewState = new Bundle();
         Parcelable listState = mMovieCoverList.getLayoutManager().onSaveInstanceState();
         mBundleRecyclerViewState.putParcelable(EXTRA_APP_STATE, listState);
+        mBundleRecyclerViewState.putString(EXTRA_QUERY_TYPE, mQueryType);
+
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mMessageReceiver);
@@ -92,9 +101,16 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         // restore RecyclerView state
         if (mBundleRecyclerViewState != null) {
             Parcelable listState = mBundleRecyclerViewState.getParcelable(EXTRA_APP_STATE);
+            mQueryType = mBundleRecyclerViewState.getString(EXTRA_QUERY_TYPE);
             mMovieCoverList.getLayoutManager().onRestoreInstanceState(listState);
+
+            if (mQueryType==HttpRequest.QUERY_FAVORITE){
+                mMovieList = MovieGuideDatabase.getInstance(this).getAllMovies();
+                mMovieCoverAdapter.setMovieData(mMovieList);
+            }
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -102,12 +118,15 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         switch (item.getItemId()) {
             case R.id.menu_popular:
                 HttpRequest.query(this,HttpRequest.QUERY_POPULAR);
+                mQueryType = HttpRequest.QUERY_POPULAR;
                 return true;
             case R.id.menu_top_rated:
                 HttpRequest.query(this,HttpRequest.QUERY_TOP_RATED);
+                mQueryType = HttpRequest.QUERY_TOP_RATED;
                 return true;
             case R.id.menu_favorites:
                 mMovieList = MovieGuideDatabase.getInstance(this).getAllMovies();
+                mQueryType = HttpRequest.QUERY_FAVORITE;
                 mMovieCoverAdapter.setMovieData(mMovieList);
             default:
                 return super.onOptionsItemSelected(item);
