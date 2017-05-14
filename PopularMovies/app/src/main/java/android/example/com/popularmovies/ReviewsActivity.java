@@ -16,7 +16,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.example.com.popularmovies.R;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class ReviewsActivity extends AppCompatActivity {
 
     private GridRecyclerView mMovieReviewList;
     private ReviewsAdapter mReviewAdapter;
+
+    private CardView cardViewStatus;
 
     private static ArrayList<ReviewsModel> mReviewList = null;
     private String mId;
@@ -37,23 +41,25 @@ public class ReviewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reviews);
 
         mMovieReviewList = (GridRecyclerView) findViewById(R.id.rv_movies_review);
+        cardViewStatus = (CardView) findViewById(R.id.card_view_loading);
+        mMovieReviewList.setVisibility(View.VISIBLE);
+        cardViewStatus.setVisibility(View.GONE);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this,1);
         mMovieReviewList.setLayoutManager(layoutManager);
 
         if(getIntent().hasExtra(HttpRequest.ID)){
             mId = getIntent().getStringExtra(HttpRequest.ID);
-        }
-
-        if(savedInstanceState!=null){
+        } else if(savedInstanceState!=null){
             mId = savedInstanceState.getString(STATE_ID);
         }
 
         mMovieReviewList.setHasFixedSize(true);
 
+
+
         mReviewAdapter = new ReviewsAdapter();
         mMovieReviewList.setAdapter(mReviewAdapter);
-
 
 
         getSupportActionBar().setTitle(getResources().getString(R.string.review_title));
@@ -89,6 +95,13 @@ public class ReviewsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mMessageReceiver);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
 
@@ -103,6 +116,12 @@ public class ReviewsActivity extends AppCompatActivity {
             if(intent.hasExtra(HttpRequest.RESULT_STATUS)){
                 if(intent.getStringExtra(HttpRequest.RESULT_STATUS).equals(HttpRequest.SUCCESS)){
                     mReviewList = intent.getParcelableArrayListExtra(HttpRequest.RESULT_DATA);
+
+                    if(mReviewList.isEmpty()){
+                        mMovieReviewList.setVisibility(View.GONE);
+                        cardViewStatus.setVisibility(View.VISIBLE);
+                    }
+
                     mReviewAdapter.setReviewData(mReviewList);
                 }else{
                     new Handler(Looper.getMainLooper()).post(new Runnable() {

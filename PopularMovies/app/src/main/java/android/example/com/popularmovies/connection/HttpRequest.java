@@ -97,6 +97,7 @@ public class HttpRequest extends IntentService{
                 super.onPostExecute(s);
                 if (s != null) {
                     Intent intent = new Intent(HttpRequest.HTTP_CONNECTION_FILTER);
+                    Log.d(TAG,"mRequest > " +mRequest);
                     DataParserBase dataParser = DataParserFactory.getDataParserObj(mRequest);
                     intent.putExtra(HttpRequest.RESULT_STATUS, SUCCESS);
                     intent.putParcelableArrayListExtra(HttpRequest.RESULT_DATA, dataParser.parseData(s));

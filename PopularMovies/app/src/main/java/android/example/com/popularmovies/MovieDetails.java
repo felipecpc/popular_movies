@@ -135,6 +135,12 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mMessageReceiver);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
