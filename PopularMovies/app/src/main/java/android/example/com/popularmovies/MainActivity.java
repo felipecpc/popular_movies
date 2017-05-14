@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mMessageReceiver);
 
-
-
     }
 
     @Override

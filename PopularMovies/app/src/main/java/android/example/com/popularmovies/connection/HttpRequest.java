@@ -4,10 +4,14 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.example.com.popularmovies.BuildConfig;
+import android.example.com.popularmovies.MovieDetails;
+import android.example.com.popularmovies.parser.DataParserBase;
+import android.example.com.popularmovies.parser.DataParserFactory;
 import android.example.com.popularmovies.parser.MovieListParser;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,16 +25,21 @@ public class HttpRequest extends IntentService{
 
     private String BASE_URL  = "http://api.themoviedb.org/3/";
     private String KEY = BuildConfig.MOVIE_DB_API_TOKEN;
-    public final static String QUERY_POPULAR = "movie/popular";
-    public final static String QUERY_TOP_RATED = "movie/top_rated";
+    public final static String QUERY_POPULAR = "popular";
+    public final static String QUERY_TOP_RATED = "top_rated";
+    public final static String QUERY_TRAILER = "videos";
+    public final static String QUERY_REVIEW = "review";
+
 
     public final static String REQUEST = "REQUEST";
+    public final static String ID = "ID";
     public final static String RESULT_STATUS = "RESULT_STATUS";
     public final static String RESULT_DATA = "RESULT_DATA";
 
 
     public final static String SUCCESS = "SUCCESS";
     public final static String FAIL = "FAIL";
+    private String mRequest=null;
 
     public static String HTTP_CONNECTION_FILTER = "HTTP_CONNECTION";
 
@@ -42,7 +51,13 @@ public class HttpRequest extends IntentService{
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if(intent.getExtras().containsKey(REQUEST)){
-            run(BASE_URL+intent.getStringExtra(REQUEST)+"?api_key="+KEY);
+            mRequest=intent.getStringExtra(REQUEST);
+            if(!intent.getExtras().containsKey(HttpRequest.ID)) {
+                run(BASE_URL + "movie/" + mRequest + "?api_key=" + KEY);
+            }else{
+                int id = intent.getIntExtra(HttpRequest.ID,0);
+                run(BASE_URL + "movie/" + id + "/"+ mRequest + "?api_key=" + KEY);
+            }
         }
     }
 
@@ -79,9 +94,9 @@ public class HttpRequest extends IntentService{
                 super.onPostExecute(s);
                 if (s != null) {
                     Intent intent = new Intent(HttpRequest.HTTP_CONNECTION_FILTER);
-                    MovieListParser mvParserList = new MovieListParser();
+                    DataParserBase dataParser = DataParserFactory.getDataParserObj(mRequest);
                     intent.putExtra(HttpRequest.RESULT_STATUS, SUCCESS);
-                    intent.putParcelableArrayListExtra(HttpRequest.RESULT_DATA, mvParserList.parseData(s));
+                    intent.putParcelableArrayListExtra(HttpRequest.RESULT_DATA, dataParser.parseData(s));
                     LocalBroadcastManager.getInstance(HttpRequest.this).sendBroadcast(intent);
                 }
             }
@@ -97,6 +112,12 @@ public class HttpRequest extends IntentService{
         ctx.startService(msg);
     }
 
+    public static void query(Context ctx, String type, int id){
+        Intent msg = new Intent(ctx, HttpRequest.class);
+        msg.putExtra(HttpRequest.ID, id);
+        msg.putExtra(HttpRequest.REQUEST, type);
+        ctx.startService(msg);
+    }
 
 
 }

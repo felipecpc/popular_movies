@@ -1,8 +1,12 @@
 package android.example.com.popularmovies;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
+import android.example.com.popularmovies.connection.HttpRequest;
 import android.example.com.popularmovies.databinding.ActivityMovieDetailsBinding;
 import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.model.TrailerModel;
@@ -13,8 +17,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
@@ -25,6 +32,7 @@ import android.transition.Slide;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -55,30 +63,8 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
 
         ActivityMovieDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
 
-            mTrailerAdapter = new TrailerAdapter(this);
+        mTrailerAdapter = new TrailerAdapter(this);
 
-            //Create Fake Data
-            trailersList = new ArrayList<>();
-            trailersList.add(new TrailerModel(0, "tWapqpCEO7Y", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(1, "c38r-SAnTWM", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(2, "bgeSXHvPoBI", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(3, "BZj00cPRmUo", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(4, "hIoJ0tYJtsU", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(5, "hIoJ0tYJtsU", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(6, "vyBd-UtVlZU", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(7, "TjI83VLKQ3I", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(8, "6CUwMuQIpNk", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(8, "KSTGuuTqcAk", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(10, "Si4uWyCGT2U", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(11, "OvW_L8sTu5E", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(12, "nT1VQkTTT7M", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(13, "S7ENUYTXlJg", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(14, "e3Nl_TCQXuw", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(15, "Ow78zp30ioE", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(16, "Sq8vjBg7EWE", "Video link 1 hahahaha"));
-            trailersList.add(new TrailerModel(17, "MKyp9Tx-NPY", "Video link 1 hahahaha"));
-
-        mTrailerAdapter.setMovieData(trailersList);
 
 
         ivMovieCover = (ImageView) findViewById(R.id.iv_movie_cover_details);
@@ -136,6 +122,15 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
         });
 
 
+        if (trailersList == null){
+            trailersList = new ArrayList<TrailerModel>();
+
+            HttpRequest.query(this,HttpRequest.QUERY_TRAILER,mMovieDetails.getId());
+
+        }else{
+            mTrailerAdapter.setMovieData(trailersList);
+        }
+
     }
 
 
@@ -153,6 +148,24 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
 
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver, new IntentFilter(HttpRequest.HTTP_CONNECTION_FILTER));
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mMessageReceiver);
     }
 
     private void initActivityTransitions() {
@@ -182,4 +195,27 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
     public void movieSelected(int selected) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+trailersList.get(selected).getKey())));
     }
+
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(intent.hasExtra(HttpRequest.RESULT_STATUS)){
+                if(intent.getStringExtra(HttpRequest.RESULT_STATUS).equals(HttpRequest.SUCCESS)){
+                    trailersList = intent.getParcelableArrayListExtra(HttpRequest.RESULT_DATA);
+                    mTrailerAdapter.setMovieData(trailersList);
+                }else{
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MovieDetails.this,getResources().getText(R.string.error),Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+            }
+
+        }
+    };
 }

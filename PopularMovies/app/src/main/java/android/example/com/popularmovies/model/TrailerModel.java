@@ -8,19 +8,19 @@ import android.os.Parcelable;
  */
 
 public class TrailerModel implements Parcelable{
-    int id;
+    String id;
     String key;
     String nome;
 
-    public TrailerModel(int id, String key, String nome){
+    public TrailerModel(String id, String key, String nome){
         this.id= id;
         this.key = key;
         this.nome = nome;
     }
 
-    public int getId(){ return id; }
+    public String getId(){ return id; }
 
-    public void setId( int id){ this.id=id; }
+    public void setId( String id){ this.id=id; }
 
     public String getKey() {
         return key;
@@ -42,7 +42,7 @@ public class TrailerModel implements Parcelable{
     public static final Parcelable.Creator<TrailerModel> CREATOR = new Parcelable.Creator<TrailerModel>() {
         public TrailerModel createFromParcel(Parcel source) {
             TrailerModel movieModel = new TrailerModel(
-                    source.readInt(),
+                    source.readString(),
                     source.readString(),
                     source.readString());
 
@@ -57,7 +57,7 @@ public class TrailerModel implements Parcelable{
         return 0;
     }
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeInt(id);
+        parcel.writeString(id);
         parcel.writeString(key);
         parcel.writeString(nome);
 

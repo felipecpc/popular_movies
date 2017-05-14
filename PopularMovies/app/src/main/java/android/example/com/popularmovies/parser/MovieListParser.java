@@ -1,6 +1,7 @@
 package android.example.com.popularmovies.parser;
 
 import android.example.com.popularmovies.model.MovieModel;
+import android.os.Parcelable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 
 public class MovieListParser extends DataParserBase{
     @Override
-    public ArrayList<MovieModel> parseData(String data) {
-        ArrayList<MovieModel> movieModelArray = new ArrayList<MovieModel>();
+    public ArrayList<Parcelable> parseData(String data) {
+        ArrayList<Parcelable> movieModelArray = new ArrayList<Parcelable>();
         try {
             JSONObject jsonObj = new JSONObject(data);
             JSONArray results = jsonObj.getJSONArray("results");
