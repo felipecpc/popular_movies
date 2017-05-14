@@ -8,19 +8,19 @@ import android.os.Parcelable;
  */
 
 public class ReviewsModel implements Parcelable{
-    int id;
+    String id;
     String author;
     String content;
 
-    public ReviewsModel(int id, String author, String content){
+    public ReviewsModel(String id, String author, String content){
         this.id= id;
         this.author = author;
         this.content = content;
     }
 
-    public int getId(){ return id; }
+    public String getId(){ return id; }
 
-    public void setId( int id){ this.id=id; }
+    public void setId( String id){ this.id=id; }
 
     public String getAuthor() {
         return author;
@@ -42,7 +42,7 @@ public class ReviewsModel implements Parcelable{
     public static final Creator<ReviewsModel> CREATOR = new Creator<ReviewsModel>() {
         public ReviewsModel createFromParcel(Parcel source) {
             ReviewsModel movieModel = new ReviewsModel(
-                    source.readInt(),
+                    source.readString(),
                     source.readString(),
                     source.readString());
 
@@ -57,7 +57,7 @@ public class ReviewsModel implements Parcelable{
         return 0;
     }
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeInt(id);
+        parcel.writeString(id);
         parcel.writeString(author);
         parcel.writeString(content);
 

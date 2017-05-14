@@ -11,7 +11,6 @@ import android.example.com.popularmovies.databinding.ActivityMovieDetailsBinding
 import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.model.TrailerModel;
 import android.example.com.popularmovies.view.MovieSelectedInterface;
-import android.example.com.popularmovies.view.ReviewsActivity;
 import android.example.com.popularmovies.view.TrailerAdapter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,7 +18,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +29,6 @@ import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
@@ -117,6 +114,7 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
             public void onClick(View v) {
                 Intent reviews = new Intent(MovieDetails.this, ReviewsActivity.class);
                 reviews.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                reviews.putExtra(HttpRequest.ID,String.valueOf(mMovieDetails.getId()));
                 startActivity(reviews);
             }
         });
@@ -125,7 +123,7 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
         if (trailersList == null){
             trailersList = new ArrayList<TrailerModel>();
 
-            HttpRequest.query(this,HttpRequest.QUERY_TRAILER,mMovieDetails.getId());
+            HttpRequest.query(this,HttpRequest.QUERY_TRAILER,String.valueOf(mMovieDetails.getId()));
 
         }else{
             mTrailerAdapter.setMovieData(trailersList);

@@ -4,10 +4,9 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.example.com.popularmovies.BuildConfig;
-import android.example.com.popularmovies.MovieDetails;
 import android.example.com.popularmovies.parser.DataParserBase;
 import android.example.com.popularmovies.parser.DataParserFactory;
-import android.example.com.popularmovies.parser.MovieListParser;
+
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,12 +22,14 @@ import okhttp3.Response;
 
 public class HttpRequest extends IntentService{
 
+    private static final String TAG = HttpRequest.class.getSimpleName();
+
     private String BASE_URL  = "http://api.themoviedb.org/3/";
     private String KEY = BuildConfig.MOVIE_DB_API_TOKEN;
     public final static String QUERY_POPULAR = "popular";
     public final static String QUERY_TOP_RATED = "top_rated";
     public final static String QUERY_TRAILER = "videos";
-    public final static String QUERY_REVIEW = "review";
+    public final static String QUERY_REVIEW = "reviews";
 
 
     public final static String REQUEST = "REQUEST";
@@ -53,9 +54,11 @@ public class HttpRequest extends IntentService{
         if(intent.getExtras().containsKey(REQUEST)){
             mRequest=intent.getStringExtra(REQUEST);
             if(!intent.getExtras().containsKey(HttpRequest.ID)) {
+                Log.d(TAG,BASE_URL + "movie/" + mRequest + "?api_key=" + KEY);
                 run(BASE_URL + "movie/" + mRequest + "?api_key=" + KEY);
             }else{
-                int id = intent.getIntExtra(HttpRequest.ID,0);
+                String id = intent.getStringExtra(HttpRequest.ID);
+                Log.d(TAG,BASE_URL + "movie/" + id + "/"+ mRequest + "?api_key=" + KEY);
                 run(BASE_URL + "movie/" + id + "/"+ mRequest + "?api_key=" + KEY);
             }
         }
@@ -112,7 +115,7 @@ public class HttpRequest extends IntentService{
         ctx.startService(msg);
     }
 
-    public static void query(Context ctx, String type, int id){
+    public static void query(Context ctx, String type, String id){
         Intent msg = new Intent(ctx, HttpRequest.class);
         msg.putExtra(HttpRequest.ID, id);
         msg.putExtra(HttpRequest.REQUEST, type);

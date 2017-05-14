@@ -27,7 +27,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".view.ReviewsActivity">
+        <activity android:name=".ReviewsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MovieDetails" />

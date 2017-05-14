@@ -24,7 +24,7 @@ public class ReviewListParser extends DataParserBase{
             for(int x=0;x<results.length();x++){
                 JSONObject moviesData = new JSONObject(results.get(x).toString());
 
-                reviewModelArray.add(new ReviewsModel(moviesData.getInt("id"),
+                reviewModelArray.add(new ReviewsModel(moviesData.getString("id"),
                                                 moviesData.getString("author"),
                                                 moviesData.getString("content")
                                                 ));
