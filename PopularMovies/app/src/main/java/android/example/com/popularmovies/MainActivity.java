@@ -1,25 +1,21 @@
 package android.example.com.popularmovies;
 
-import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.example.com.popularmovies.connection.HttpConnectionInterface;
-import android.example.com.popularmovies.connection.HttpConnectionManager;
-import android.example.com.popularmovies.model.HttpReponseModel;
+import android.content.IntentFilter;
+import android.example.com.popularmovies.connection.HttpRequest;
 import android.example.com.popularmovies.model.MovieModel;
-import android.example.com.popularmovies.parser.MovieListParser;
 import android.example.com.popularmovies.ui.GridRecyclerView;
 import android.example.com.popularmovies.view.MovieCoverAdapter;
 import android.example.com.popularmovies.view.MovieSelectedInterface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
-import android.support.v7.app.ActionBar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,17 +24,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements MovieSelectedInterface, HttpConnectionInterface {
+public class MainActivity extends AppCompatActivity implements MovieSelectedInterface{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private GridRecyclerView mMovieCoverList;
     private MovieCoverAdapter mMovieCoverAdapter;
-    private HttpConnectionManager mHttpConnectionManager;
     private static ArrayList<MovieModel> mMovieList = null;
 
     private static Bundle mBundleRecyclerViewState;
     private String EXTRA_APP_STATE = "APP_STATE";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +51,12 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         mMovieCoverAdapter = new MovieCoverAdapter(this);
         mMovieCoverList.setAdapter(mMovieCoverAdapter);
 
-        mHttpConnectionManager = new HttpConnectionManager(this);
 
         if (mMovieList == null){
             mMovieList = new ArrayList<MovieModel>();
-            mHttpConnectionManager.queryPopularMovies();
+
+            HttpRequest.query(this,HttpRequest.QUERY_POPULAR);
+
         }else{
             mMovieCoverAdapter.setMovieData(mMovieList);
         }
@@ -78,11 +75,21 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         mBundleRecyclerViewState = new Bundle();
         Parcelable listState = mMovieCoverList.getLayoutManager().onSaveInstanceState();
         mBundleRecyclerViewState.putParcelable(EXTRA_APP_STATE, listState);
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mMessageReceiver);
+
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver, new IntentFilter(HttpRequest.HTTP_CONNECTION_FILTER));
+
         // restore RecyclerView state
         if (mBundleRecyclerViewState != null) {
             Parcelable listState = mBundleRecyclerViewState.getParcelable(EXTRA_APP_STATE);
@@ -95,10 +102,10 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_popular:
-                mHttpConnectionManager.queryPopularMovies();
+                HttpRequest.query(this,HttpRequest.QUERY_POPULAR);
                 return true;
             case R.id.menu_top_rated:
-                mHttpConnectionManager.queryTopRatedMovies();
+                HttpRequest.query(this,HttpRequest.QUERY_TOP_RATED);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -114,22 +121,34 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
     }
 
     @Override
-    public void requestResponse(HttpReponseModel response) {
-        if (response.getStatus().equals(HttpReponseModel.RequestStatus.SUCCESS)){
-            MovieListParser mListParser = new MovieListParser();
-            mMovieList = mListParser.parseData(response.getResponseData());
-            mMovieCoverAdapter.setMovieData(mMovieList);
+    protected void onStop() {
+        super.onStop();
 
-        }else{
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(MainActivity.this,getResources().getText(R.string.error),Toast.LENGTH_LONG).show();
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(intent.hasExtra(HttpRequest.RESULT_STATUS)){
+                if(intent.getStringExtra(HttpRequest.RESULT_STATUS).equals(HttpRequest.SUCCESS)){
+                    mMovieList = intent.getParcelableArrayListExtra(HttpRequest.RESULT_DATA);
+                    mMovieCoverAdapter.setMovieData(mMovieList);
+                }else{
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this,getResources().getText(R.string.error),Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
-            });
+
+            }
 
         }
-    }
+    };
+
+
 
     @Override public void onEnterAnimationComplete() {
         super.onEnterAnimationComplete();

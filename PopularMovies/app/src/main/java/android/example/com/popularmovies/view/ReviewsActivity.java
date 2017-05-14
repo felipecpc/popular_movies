@@ -1,7 +1,5 @@
 package android.example.com.popularmovies.view;
 
-import android.example.com.popularmovies.connection.HttpConnectionManager;
-import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.model.ReviewsModel;
 import android.example.com.popularmovies.ui.GridRecyclerView;
 import android.support.v7.app.AppCompatActivity;

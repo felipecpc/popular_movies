@@ -32,6 +32,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MovieDetails" />
         </activity>
+
+        <service android:enabled="true" android:name=".connection.HttpRequest" />
+
     </application>
 
 </manifest>
