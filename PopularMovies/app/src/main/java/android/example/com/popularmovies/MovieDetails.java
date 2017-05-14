@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.example.com.popularmovies.connection.HttpRequest;
+import android.example.com.popularmovies.database.MovieGuideDatabase;
 import android.example.com.popularmovies.databinding.ActivityMovieDetailsBinding;
 import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.model.TrailerModel;
@@ -23,10 +25,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -38,11 +39,8 @@ import java.util.ArrayList;
 
 public class MovieDetails extends AppCompatActivity implements MovieSelectedInterface {
 
-    private ImageView ivMovieCover;
-    private RecyclerView rcTrailer;
-    private CardView cvReview;
-    CollapsingToolbarLayout collapsingToolbarLayout;
     private TrailerAdapter mTrailerAdapter;
+    CollapsingToolbarLayout collapsingToolbarLayout;
     public static String EXTRA_MOVIE_DETAILS = "MOVIE_DETAILS";
     public static final String STATE_TRAILERS = "trailers";
     public static final String STATE_MOVIE_DETAIL = "movie_details";
@@ -51,6 +49,8 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
     MovieModel mMovieDetails;
     ArrayList<TrailerModel> trailersList;
 
+    ImageView imgView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +58,10 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
 
         initActivityTransitions();
 
-        ActivityMovieDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
+        final ActivityMovieDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
 
+        imgView = (ImageView) findViewById(R.id.iv_movie_cover_details);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mTrailerAdapter = new TrailerAdapter(this);
 
 
@@ -68,16 +70,10 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
             trailersList = savedInstanceState.getParcelableArrayList(STATE_TRAILERS);
         }
 
-        ivMovieCover = (ImageView) findViewById(R.id.iv_movie_cover_details);
-        rcTrailer = (RecyclerView) findViewById(R.id.rc_trailer);
-        cvReview = (CardView) findViewById(R.id.cardView_reviews);
 
-        rcTrailer.setAdapter(mTrailerAdapter);
-        rcTrailer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        if (isPortraint())
-            collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-
+        binding.rcTrailer.setAdapter(mTrailerAdapter);
+        binding.rcTrailer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         Intent receivedIntent = getIntent();
 
@@ -85,13 +81,13 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
             mMovieDetails = receivedIntent.getParcelableExtra(EXTRA_MOVIE_DETAILS);
 
             binding.setMovie(mMovieDetails);
-            Picasso.with(ivMovieCover.getContext()).load(mMovieDetails.getCoverLink())
+            Picasso.with(binding.ivMovieCoverDetails.getContext()).load(mMovieDetails.getCoverLink())
                     .fit()
-                    .error(ivMovieCover.getContext().getResources().getDrawable(R.drawable.ops))
-                    .into(ivMovieCover, new Callback() {
+                    .error(binding.ivMovieCoverDetails.getContext().getResources().getDrawable(R.drawable.ops))
+                    .into(imgView, new Callback() {
                 @Override
                 public void onSuccess() {
-                    Bitmap bitmap = ((BitmapDrawable) ivMovieCover.getDrawable()).getBitmap();
+                    Bitmap bitmap = ((BitmapDrawable) imgView.getDrawable()).getBitmap();
                     Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                         public void onGenerated(Palette palette) {
                             if (isPortraint())
@@ -111,9 +107,13 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
 
 
 
+        if(MovieGuideDatabase.getInstance(MovieDetails.this).isMovieAtDatabase(mMovieDetails)){
+            binding.toggleButton.setChecked(true);
+        }
 
 
-        cvReview.setOnClickListener(new View.OnClickListener() {
+
+        binding.cardViewReviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent reviews = new Intent(MovieDetails.this, ReviewsActivity.class);
@@ -133,6 +133,16 @@ public class MovieDetails extends AppCompatActivity implements MovieSelectedInte
             mTrailerAdapter.setMovieData(trailersList);
         }
 
+        binding.toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(binding.toggleButton.isChecked()){
+                    MovieGuideDatabase.getInstance(MovieDetails.this).addMovie(mMovieDetails);
+                }else{
+                    MovieGuideDatabase.getInstance(MovieDetails.this).removeMovie(mMovieDetails);
+                }
+            }
+        });
     }
 
     @Override

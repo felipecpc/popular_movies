@@ -15,8 +15,9 @@ public class MovieModel implements Parcelable{
     String releaseDate;
     String coverLink;
     String posterLink;
+    int favorite;
 
-    public MovieModel(int id, String originalTitle, String plotSynopsis, String userRate, String releaseDate, String coverLink, String posterLink){
+    public MovieModel(int id, String originalTitle, String plotSynopsis, String userRate, String releaseDate, String coverLink, String posterLink, int favorite){
         this.id= id;
         this.originalTitle = originalTitle;
         this.plotSynopsis = plotSynopsis;
@@ -24,6 +25,7 @@ public class MovieModel implements Parcelable{
         this.releaseDate = releaseDate;
         this.coverLink = coverLink;
         this.posterLink = posterLink;
+        this.favorite = favorite;
     }
 
     public int getId(){ return id; }
@@ -78,6 +80,14 @@ public class MovieModel implements Parcelable{
         this.posterLink = posterLink;
     }
 
+    public int getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(int favorite) {
+        this.favorite = favorite;
+    }
+
     public static final Parcelable.Creator<MovieModel> CREATOR = new Parcelable.Creator<MovieModel>() {
         public MovieModel createFromParcel(Parcel source) {
             MovieModel movieModel = new MovieModel(
@@ -87,7 +97,8 @@ public class MovieModel implements Parcelable{
                     source.readString(),
                     source.readString(),
                     source.readString(),
-                    source.readString());
+                    source.readString(),
+                    source.readInt());
 
             return movieModel;
         }
@@ -107,6 +118,7 @@ public class MovieModel implements Parcelable{
         parcel.writeString(releaseDate);
         parcel.writeString(coverLink);
         parcel.writeString(posterLink);
+        parcel.writeInt(favorite);
     }
 
 }

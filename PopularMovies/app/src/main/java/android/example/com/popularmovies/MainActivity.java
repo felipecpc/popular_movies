@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.example.com.popularmovies.connection.HttpRequest;
+import android.example.com.popularmovies.database.MovieGuideDatabase;
 import android.example.com.popularmovies.model.MovieModel;
 import android.example.com.popularmovies.ui.GridRecyclerView;
 import android.example.com.popularmovies.view.MovieCoverAdapter;
@@ -105,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements MovieSelectedInte
             case R.id.menu_top_rated:
                 HttpRequest.query(this,HttpRequest.QUERY_TOP_RATED);
                 return true;
+            case R.id.menu_favorites:
+                mMovieList = MovieGuideDatabase.getInstance(this).getAllMovies();
+                mMovieCoverAdapter.setMovieData(mMovieList);
             default:
                 return super.onOptionsItemSelected(item);
         }

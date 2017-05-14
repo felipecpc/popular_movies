@@ -29,7 +29,8 @@ public class MovieListParser extends DataParserBase{
                                                 moviesData.getString("vote_average"),
                                                 moviesData.getString("release_date"),
                                                 "http://image.tmdb.org/t/p/w185"+moviesData.getString("backdrop_path"),
-                                                "http://image.tmdb.org/t/p/w185"+moviesData.getString("poster_path")
+                                                "http://image.tmdb.org/t/p/w185"+moviesData.getString("poster_path"),
+                                                0
                                                 ));
 
             }
