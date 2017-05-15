@@ -15,5 +15,8 @@
     <string name="loading">Loading</string>
     <string name="no_review">There is no review available for this movie :(</string>
     <string name="menu_favorites">Favorites</string>
+    <string name="content_authority">com.example.android.popularmovies</string>
+
+
 
 </resources>

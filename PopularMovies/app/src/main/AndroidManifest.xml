@@ -33,6 +33,12 @@
                 android:value=".MovieDetails" />
         </activity>
 
+        <!-- Our ContentProvider -->
+        <provider
+            android:name=".database.MovieGuideContentProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"/>
+
         <service android:enabled="true" android:name=".connection.HttpRequest" />
 
     </application>

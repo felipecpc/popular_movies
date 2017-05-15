@@ -22,22 +22,22 @@ public class MoviesGuideDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         // Create a table to hold waitlist data
-        final String SQL_CREATE_MOVIEGUIDE_TABLE = "CREATE TABLE " + MovieGuideDbContract.TABLE_NAME + " (" +
-                MovieGuideDbContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                MovieGuideDbContract.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-                MovieGuideDbContract.COLUMN_ORIGINAL_TITLE + " TEXT NOT NULL, " +
-                MovieGuideDbContract.COLUMN_PLOT_SYNOPSIS + " TEXT NOT NULL, " +
-                MovieGuideDbContract.COLUMN_USER_RATE + " TEXT NOT NULL, " +
-                MovieGuideDbContract.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
-                MovieGuideDbContract.COLUMN_COVER_LINK + " TEXT NOT NULL, " +
-                MovieGuideDbContract.COLUMN_POSTER_LINK + " TEXT NOT NULL);";
+        final String SQL_CREATE_MOVIEGUIDE_TABLE = "CREATE TABLE " + MovieGuideDbContract.MovieEntry.TABLE_NAME + " (" +
+                MovieGuideDbContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                MovieGuideDbContract.MovieEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
+                MovieGuideDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE + " TEXT NOT NULL, " +
+                MovieGuideDbContract.MovieEntry.COLUMN_PLOT_SYNOPSIS + " TEXT NOT NULL, " +
+                MovieGuideDbContract.MovieEntry.COLUMN_USER_RATE + " TEXT NOT NULL, " +
+                MovieGuideDbContract.MovieEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
+                MovieGuideDbContract.MovieEntry.COLUMN_COVER_LINK + " TEXT NOT NULL, " +
+                MovieGuideDbContract.MovieEntry.COLUMN_POSTER_LINK + " TEXT NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIEGUIDE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieGuideDbContract.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieGuideDbContract.MovieEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }

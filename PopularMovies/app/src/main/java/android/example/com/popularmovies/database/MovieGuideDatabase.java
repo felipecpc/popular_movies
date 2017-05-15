@@ -3,8 +3,9 @@ package android.example.com.popularmovies.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.example.com.popularmovies.model.MovieModel;
+import android.net.Uri;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,18 +14,16 @@ import java.util.ArrayList;
  */
 
 public class MovieGuideDatabase {
-    private static SQLiteDatabase mDb;
+
     private static Context mContext;
     private static MovieGuideDatabase ourInstance=null;
+    private static final String TAG = MovieGuideDatabase.class.getSimpleName();
 
     public static MovieGuideDatabase getInstance(Context ctx) {
         mContext = ctx;
 
         if  (ourInstance == null) {
             ourInstance = new MovieGuideDatabase();
-            // Create a DB helper (this will create the DB if run for the first time)
-            MoviesGuideDBHelper dbHelper = new MoviesGuideDBHelper(mContext);
-            mDb = dbHelper.getWritableDatabase();
         }
 
 
@@ -42,24 +41,30 @@ public class MovieGuideDatabase {
      */
     public ArrayList<MovieModel> getAllMovies() {
         ArrayList<MovieModel> modelModelList = new ArrayList<>();
-        Cursor cursor = mDb.query(
-                MovieGuideDbContract.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                MovieGuideDbContract.COLUMN_ORIGINAL_TITLE);
+        Cursor cursor;
+        try {
+            cursor=mContext.getContentResolver().query(MovieGuideDbContract.MovieEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    MovieGuideDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Not able to read data from contentResolver");
+            e.printStackTrace();
+            return null;
+        }
+
 
         while(cursor.moveToNext()){
             modelModelList.add(new MovieModel(
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.COLUMN_MOVIE_ID))),
-                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.COLUMN_ORIGINAL_TITLE)),
-                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.COLUMN_PLOT_SYNOPSIS)),
-                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.COLUMN_USER_RATE)),
-                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.COLUMN_RELEASE_DATE)),
-                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.COLUMN_COVER_LINK)),
-                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.COLUMN_POSTER_LINK)),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.MovieEntry.COLUMN_MOVIE_ID))),
+                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE)),
+                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.MovieEntry.COLUMN_PLOT_SYNOPSIS)),
+                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.MovieEntry.COLUMN_USER_RATE)),
+                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.MovieEntry.COLUMN_RELEASE_DATE)),
+                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.MovieEntry.COLUMN_COVER_LINK)),
+                    cursor.getString(cursor.getColumnIndex(MovieGuideDbContract.MovieEntry.COLUMN_POSTER_LINK)),
                     0
             ));
         }
@@ -68,26 +73,46 @@ public class MovieGuideDatabase {
     }
 
 
-    public long addMovie(MovieModel movieModel) {
+    public Uri addMovie(MovieModel movieModel) {
         ContentValues cv = new ContentValues();
-        cv.put(MovieGuideDbContract.COLUMN_MOVIE_ID, movieModel.getId());
-        cv.put(MovieGuideDbContract.COLUMN_ORIGINAL_TITLE, movieModel.getOriginalTitle());
-        cv.put(MovieGuideDbContract.COLUMN_PLOT_SYNOPSIS, movieModel.getPlotSynopsis());
-        cv.put(MovieGuideDbContract.COLUMN_USER_RATE, movieModel.getUserRate());
-        cv.put(MovieGuideDbContract.COLUMN_RELEASE_DATE, movieModel.getReleaseDate());
-        cv.put(MovieGuideDbContract.COLUMN_COVER_LINK, movieModel.getCoverLink());
-        cv.put(MovieGuideDbContract.COLUMN_POSTER_LINK, movieModel.getPosterLink());
+        cv.put(MovieGuideDbContract.MovieEntry.COLUMN_MOVIE_ID, movieModel.getId());
+        cv.put(MovieGuideDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE, movieModel.getOriginalTitle());
+        cv.put(MovieGuideDbContract.MovieEntry.COLUMN_PLOT_SYNOPSIS, movieModel.getPlotSynopsis());
+        cv.put(MovieGuideDbContract.MovieEntry.COLUMN_USER_RATE, movieModel.getUserRate());
+        cv.put(MovieGuideDbContract.MovieEntry.COLUMN_RELEASE_DATE, movieModel.getReleaseDate());
+        cv.put(MovieGuideDbContract.MovieEntry.COLUMN_COVER_LINK, movieModel.getCoverLink());
+        cv.put(MovieGuideDbContract.MovieEntry.COLUMN_POSTER_LINK, movieModel.getPosterLink());
 
-        return mDb.insert(MovieGuideDbContract.TABLE_NAME, null, cv);
+        Uri uri = mContext.getContentResolver().insert(MovieGuideDbContract.MovieEntry.CONTENT_URI, cv);
+
+        return uri;
     }
 
     public boolean removeMovie(MovieModel movieModel){
-        return mDb.delete(MovieGuideDbContract.TABLE_NAME, MovieGuideDbContract.COLUMN_MOVIE_ID + " = " + movieModel.getId(),null) > 0;
+        Uri uri = MovieGuideDbContract.MovieEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(String.valueOf(movieModel.getId())).build();
+
+        return mContext.getContentResolver().delete(uri, null, null) > 0;
     }
 
     public boolean isMovieAtDatabase(MovieModel mMovieDetails) {
-        Cursor cursor = mDb.query(MovieGuideDbContract.TABLE_NAME, null, MovieGuideDbContract.COLUMN_MOVIE_ID + "=?",
-                new String[] { String.valueOf(mMovieDetails.getId()) }, null, null, null, null);
+
+        Uri uri = MovieGuideDbContract.MovieEntry.buildWeatherUriWithID(String.valueOf(mMovieDetails.getId()));
+
+
+        Cursor cursor;
+        try {
+            cursor=mContext.getContentResolver().query(uri,
+                    null,
+                    null,
+                    null,
+                    MovieGuideDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Not able to read data from contentResolver");
+            e.printStackTrace();
+            return false;
+        }
 
         if(cursor.getCount()==0){
             return false;
